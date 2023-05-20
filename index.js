@@ -31,31 +31,53 @@ async function run() {
 
 
         // adding toys
-       app.get('/adding',async(req,res) =>{
-        let query = {};
-        if(req.query?.email){
-            query = {email: req.query.email}
-        }
-       const result = await addingToysCollection.find(query).toArray();
-       res.send(result)
-       console.log("query",query)
-       })
-
-
-        app.post('/adding',async(req,res)=>{
-         const adding = req.body;
-         console.log(adding)
-         const result = await addingToysCollection.insertOne(adding)
-         res.send(result)
+        app.get('/adding/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: new ObjectId(id) }
+            const result = await addingToysCollection.findOne(query);
+            res.send(result)
+        })
+        app.get('/adding', async (req, res) => {
+            let query = {};
+            if (req.query?.email) {
+                query = { email: req.query.email }
+            }
+            const result = await addingToysCollection.find(query).toArray();
+            res.send(result)
         })
 
-     app.delete('/adding/:id', async(req,res)=>{
-        const id = req.params.id;
-        const query = {_id: new ObjectId(id)}
-        const result = await addingToysCollection.deleteOne(query);
-       res.send(result)
 
-     })
+        app.post('/adding', async (req, res) => {
+            const adding = req.body;
+            console.log(adding)
+            const result = await addingToysCollection.insertOne(adding)
+            res.send(result)
+        })
+
+        app.put('/adding/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const option = { upsert: true }
+            const updatedToy = req.body;
+            const toy = {
+                $set: {
+                    price: updatedToy.price,
+                    quantity: updatedToy.quantity,
+                    details: updatedToy.details
+                }
+            }
+            const result = await addingToysCollection.updateOne(filter, toy, option)
+            res.send(result)
+        })
+
+        app.delete('/adding/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await addingToysCollection.deleteOne(query);
+            res.send(result)
+
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
