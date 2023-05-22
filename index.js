@@ -31,8 +31,6 @@ async function run() {
 
 
         // adding toys
-     
-
         app.get('/adding', async (req, res) => {
             let query = {};
             if (req.query?.email) {
@@ -50,14 +48,14 @@ async function run() {
             res.send(result)
         })
         //  all data find
-        app.get('/adding',async(req,res)=>{
+        app.get('/adding', async (req, res) => {
             const cursor = addingToysCollection.find().limit(20);
             const result = await cursor.toArray();
             res.send(result)
         })
-         
-     
 
+
+        // sending all data to mongodb
         app.post('/adding', async (req, res) => {
             const adding = req.body;
             console.log(adding)
