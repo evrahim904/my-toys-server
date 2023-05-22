@@ -41,7 +41,7 @@ async function run() {
             const result = await addingToysCollection.find(query).toArray();
             res.send(result)
         })
-
+        // single data find
         app.get('/adding/:id', async (req, res) => {
             const id = req.params.id;
             console.log(id)
@@ -49,12 +49,14 @@ async function run() {
             const result = await addingToysCollection.findOne(query);
             res.send(result)
         })
+        //  all data find
         app.get('/adding',async(req,res)=>{
-            const cursor = addingToysCollection.find();
+            const cursor = addingToysCollection.find().limit(20);
             const result = await cursor.toArray();
             res.send(result)
         })
-
+         
+     
 
         app.post('/adding', async (req, res) => {
             const adding = req.body;
